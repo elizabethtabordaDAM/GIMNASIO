@@ -189,6 +189,12 @@ val actividades = listOf(
     Actividad(R.drawable.caminata_libre, "Caminata libre", "Caminar a tu ritmo también cuenta como entrenar", "40 min")
 )
 
+val estadosEnergia = listOf(
+    EstadoEnergia("😄", "Con Energía", "Desafío total", Color(0xFF8FB39B)),
+    EstadoEnergia("😐", "Normal", "Ritmo medio", Color(0xFFD8C3A5) ),
+    EstadoEnergia("😴", "Sin Energía", "Recuperación", Color(0xFFC27A5E) )
+)
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -286,7 +292,19 @@ fun GIMNASIO() {
                 ActividadCard(actividad)
             }
         }
+        Spacer(modifier = Modifier.height(28.dp))
 
+        // ----- Semáforo de Fatiga -----
+        TituloSeccion("¿Cómo va esa energía?", " Hoy entrenas para ti.Tu entrenamiento se adapta a cómo te sientes")
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            for (estado in estadosEnergia) {
+                SemaforoItem(estado, Modifier.weight(1f))
+            }
+        }
     }
 
 
@@ -441,6 +459,39 @@ fun ActividadCard(actividad: Actividad) {
             Text(
                 text = actividad.mensaje,
                 style = MaterialTheme.typography.bodySmall,
+                color = TextoSuave
+            )
+        }
+    }
+}
+@Composable
+fun SemaforoItem(estado: EstadoEnergia, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { }, // solo efecto al presionar
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = estado.color.copy(alpha = 0.18f),
+            contentColor = Color.White
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = estado.emoji, fontSize = 30.sp)
+            Text(
+                text = estado.nombre,
+                style = MaterialTheme.typography.titleMedium,
+                color = estado.color
+            )
+            Text(
+                text = estado.mision,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
                 color = TextoSuave
             )
         }
