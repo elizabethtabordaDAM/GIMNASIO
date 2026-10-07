@@ -182,6 +182,13 @@ val objetivos = listOf(
     )
 )
 
+val actividades = listOf(
+    Actividad(R.drawable.zumba, "Zumba", "Bailar también oxigena tu cerebro y levanta tu ánimo", "45 min"),
+    Actividad(R.drawable.saliratrotar, "Salir a trotar", "Un trote al aire libre despeja la mente y cuida tu corazón", "30 min"),
+    Actividad(R.drawable.relajacion, "Relajar el cuerpo", "Respira, estírate y suelta la tensión del día", "20 min"),
+    Actividad(R.drawable.caminata_libre, "Caminata libre", "Caminar a tu ritmo también cuenta como entrenar", "40 min")
+)
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -266,7 +273,23 @@ fun GIMNASIO() {
                 ObjetivoCard(objetivo)
             }
         }
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // ----- Muévete a tu ritmo -----
+        TituloSeccion("¿Poco tiempo? ", "¡Muévete al ritmo que quieras! Elige tu opción ideal y entrena feliz.💃 →")
+
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            for (actividad in actividades) {
+                ActividadCard(actividad)
+            }
+        }
+
     }
+
+
 }
 
 @Composable
@@ -371,6 +394,54 @@ fun ObjetivoCard(objetivo: Objetivo) {
                 text = objetivo.descripcion,
                 style = MaterialTheme.typography.bodySmall,
                 color = Champagne
+            )
+        }
+    }
+}
+@Composable
+fun ActividadCard(actividad: Actividad) {
+    Card(
+        modifier = Modifier
+            .width(260.dp)
+            .clip(Redondeado)
+            .clickable { }, // solo efecto al presionar
+        shape = Redondeado,
+        colors = CardDefaults.cardColors(containerColor = Tarjeta, contentColor = Color.White)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Image(
+                painter = painterResource(id = actividad.imagen),
+                contentDescription = actividad.nombre,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(130.dp)
+                    .clip(RoundedCornerShape(14.dp))
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = actividad.nombre,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = actividad.duracion,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Coral
+                )
+            }
+
+            Text(
+                text = actividad.mensaje,
+                style = MaterialTheme.typography.bodySmall,
+                color = TextoSuave
             )
         }
     }
