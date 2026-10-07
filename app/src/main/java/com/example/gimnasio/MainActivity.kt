@@ -194,7 +194,11 @@ val estadosEnergia = listOf(
     EstadoEnergia("😐", "Normal", "Ritmo medio", Color(0xFFD8C3A5) ),
     EstadoEnergia("😴", "Sin Energía", "Recuperación", Color(0xFFC27A5E) )
 )
-
+val retosFlash = listOf(
+    RetoFlash(R.drawable.activacion, "Activación express", "5 min"),
+    RetoFlash(R.drawable.relajamiento_express, "Estiramiento salvavidas", "8 min"),
+    RetoFlash(R.drawable.cardio_relampago, "Cardio relámpago", "10 min")
+)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -305,6 +309,16 @@ fun GIMNASIO() {
                 SemaforoItem(estado, Modifier.weight(1f))
             }
         }
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // ----- Retos Flash -----
+        TituloSeccion("Retos Flash ⚡", "¿Sin tiempo? Mantén tu racha con un micro-reto")
+
+        for (reto in retosFlash) {
+            RetoFlashCard(reto)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
     }
 
 
@@ -494,6 +508,54 @@ fun SemaforoItem(estado: EstadoEnergia, modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Center,
                 color = TextoSuave
             )
+        }
+    }
+}
+
+@Composable
+fun RetoFlashCard(reto: RetoFlash) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { }, // solo efecto al presionar
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Tarjeta, contentColor = Color.White)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = reto.imagen),
+                contentDescription = reto.nombre,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            Text(
+                text = reto.nombre,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = reto.duracion,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Champagne
+            )
+        }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun GIMNASIOPreview() {
+    GIMNASIOTheme {
+        Surface(color = Carbon, contentColor = Color.White) {
+            GIMNASIO()
         }
     }
 }
