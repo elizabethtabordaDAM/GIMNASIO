@@ -46,19 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gimnasio.ui.theme.GIMNASIOTheme
+import com.example.gimnasio.ui.theme.*
 
-// ---------- Paleta elegante: carbón + champagne + esmeralda + coral ----------
-val Carbon = Color(0xFF0F1115)
-val Tarjeta = Color(0xFF181B22)
-val TarjetaClara = Color(0xFF222630)
-val Champagne = Color(0xFFD4B483)
-val Esmeralda = Color(0xFF2F8F83)
-val Coral = Color(0xFFFF7A59)
-val TextoSuave = Color(0xFFA7ADBA)
-val Verde = Color(0xFF3DB88A)
-val Ambar = Color(0xFFE0A93B)
-val Rojo = Color(0xFFE0594F)
+
 val Redondeado = RoundedCornerShape(20.dp)
 
 // ---------- Modelos de datos ----------
@@ -190,9 +180,9 @@ val actividades = listOf(
 )
 
 val estadosEnergia = listOf(
-    EstadoEnergia("😄", "Con Energía", "Desafío total", Color(0xFF8FB39B)),
-    EstadoEnergia("😐", "Normal", "Ritmo medio", Color(0xFFD8C3A5) ),
-    EstadoEnergia("😴", "Sin Energía", "Recuperación", Color(0xFFC27A5E) )
+    EstadoEnergia("😄", "Con Energía", "Desafío total", Verde),
+    EstadoEnergia("😐", "Normal", "Ritmo medio", Ambar),
+    EstadoEnergia("😴", "Sin Energía", "Recuperación",Rojo  )
 )
 val retosFlash = listOf(
     RetoFlash(R.drawable.activacion, "Activación express", "5 min"),
@@ -207,8 +197,8 @@ class MainActivity : ComponentActivity() {
             GIMNASIOTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Carbon,
-                    contentColor = Color.White
+                    color = MaterialTheme.colorScheme.background,
+                    contentColor = 	MaterialTheme.colorScheme.onSurface
                 ) {
                     GIMNASIO()
                 }
@@ -229,7 +219,7 @@ fun TituloSeccion(titulo: String, subtitulo: String? = null) {
         Text(
             text = subtitulo,
             style = MaterialTheme.typography.bodyMedium,
-            color = TextoSuave
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 
@@ -254,7 +244,7 @@ fun GIMNASIO() {
         Text(
             text = "Tu historia de transformación comienza aquí. Sube de nivel.",
             style = MaterialTheme.typography.bodyMedium,
-            color = Champagne
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -330,7 +320,7 @@ fun PerfilHeroeCard() {
         modifier = Modifier
             .fillMaxWidth()
             .clip(Redondeado)
-            .background(Brush.horizontalGradient(listOf(Esmeralda, Tarjeta)))
+            .background(Brush.horizontalGradient(listOf(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.surface)))
             .padding(16.dp)
     ) {
         Column {
@@ -355,7 +345,7 @@ fun PerfilHeroeCard() {
                     Text(
                         text = "Tu Guardián evoluciona con cada entrenamiento",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.8f)
+                        color = 	MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                     )
                 }
             }
@@ -368,8 +358,8 @@ fun PerfilHeroeCard() {
                     .fillMaxWidth()
                     .height(8.dp)
                     .clip(RoundedCornerShape(50)),
-                color = Champagne,
-                trackColor = Color.White.copy(alpha = 0.2f)
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = 	MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -425,7 +415,7 @@ fun ObjetivoCard(objetivo: Objetivo) {
             Text(
                 text = objetivo.descripcion,
                 style = MaterialTheme.typography.bodySmall,
-                color = Champagne
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -438,7 +428,7 @@ fun ActividadCard(actividad: Actividad) {
             .clip(Redondeado)
             .clickable { }, // solo efecto al presionar
         shape = Redondeado,
-        colors = CardDefaults.cardColors(containerColor = Tarjeta, contentColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface, contentColor = 	MaterialTheme.colorScheme.onSurface)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Image(
@@ -466,14 +456,14 @@ fun ActividadCard(actividad: Actividad) {
                 Text(
                     text = actividad.duracion,
                     style = MaterialTheme.typography.labelMedium,
-                    color = Coral
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
 
             Text(
                 text = actividad.mensaje,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextoSuave
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -487,7 +477,7 @@ fun SemaforoItem(estado: EstadoEnergia, modifier: Modifier = Modifier) {
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = estado.color.copy(alpha = 0.18f),
-            contentColor = Color.White
+            contentColor = 	MaterialTheme.colorScheme.onSurface
         )
     ) {
         Column(
@@ -506,7 +496,7 @@ fun SemaforoItem(estado: EstadoEnergia, modifier: Modifier = Modifier) {
                 text = estado.mision,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
-                color = TextoSuave
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -520,7 +510,7 @@ fun RetoFlashCard(reto: RetoFlash) {
             .clip(RoundedCornerShape(16.dp))
             .clickable { }, // solo efecto al presionar
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Tarjeta, contentColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface, contentColor = 	MaterialTheme.colorScheme.onSurface)
     ) {
         Row(
             modifier = Modifier
@@ -545,7 +535,7 @@ fun RetoFlashCard(reto: RetoFlash) {
             Text(
                 text = reto.duracion,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Champagne
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -554,7 +544,7 @@ fun RetoFlashCard(reto: RetoFlash) {
 @Composable
 fun GIMNASIOPreview() {
     GIMNASIOTheme {
-        Surface(color = Carbon, contentColor = Color.White) {
+        Surface(color = MaterialTheme.colorScheme.background, contentColor = 	MaterialTheme.colorScheme.onSurface) {
             GIMNASIO()
         }
     }
