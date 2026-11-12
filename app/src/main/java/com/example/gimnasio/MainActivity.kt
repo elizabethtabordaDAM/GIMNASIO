@@ -65,6 +65,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import java.text.Normalizer
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 val Redondeado = RoundedCornerShape(20.dp)
@@ -1444,11 +1446,10 @@ fun RetoFlashCard(reto: RetoFlash, diasCompletados: Int, onClick: () -> Unit) {
 @Composable
 fun AppNavegacion() {
     val navController = rememberNavController()
-    val progresoRetos = remember { mutableStateListOf(0, 0, 0) }
-    val favoritos = remember { mutableStateListOf<Int>() }
-    val alternarFavorito: (Int) -> Unit = { indice ->
-        if (favoritos.contains(indice)) favoritos.remove(indice) else favoritos.add(indice)
-    }
+    val viewModel: GimnasioViewModel = viewModel()
+    val progresoRetos by viewModel.progresoRetos.collectAsState()
+    val favoritos by viewModel.favoritos.collectAsState()
+    val alternarFavorito: (Int) -> Unit = { indice -> viewModel.alternarFavorito(indice) }
 
     NavHost(navController = navController, startDestination = "inicio") {
         composable("inicio") {
@@ -1486,8 +1487,8 @@ fun AppNavegacion() {
             reto = retosFlash[indice],
             racha = progresoRetos.sum(),
             diasCompletados = progresoRetos[indice],
-            onCompletarDia = { progresoRetos[indice] = progresoRetos[indice] + 1 },
-            onReiniciar = { progresoRetos[indice] = 0 },
+            onCompletarDia = { viewModel.completarDiaReto(indice) },
+            onReiniciar = { viewModel.reiniciarReto(indice) },
             onVolver = { navController.popBackStack() }
         )
     }
