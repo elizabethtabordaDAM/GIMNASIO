@@ -1,4 +1,4 @@
-package com.example.gimnasio
+package com.example.gimnasio.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.gimnasio.data.GimnasioDatabase
 import com.example.gimnasio.data.GimnasioRepository
 import com.example.gimnasio.data.RegistroEntrenamientoEntity
+import com.example.gimnasio.data.retosFlash
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,6 @@ data class EstadisticasDiario(
     val completadas: Int = 0,
     val totalMinutos: Int = 0
 )
-
 class GimnasioViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repositorio: GimnasioRepository
