@@ -62,6 +62,8 @@ La navegación se hace con **Navigation Compose**, usando `NavController` y `Nav
 | 7 | **Diario** | `diario` | Historial de entrenamientos guardados en Room. Arriba muestra las estadísticas (total de sesiones, completadas y minutos acumulados) y una fila de filtros por objetivo ("Todos" o un objetivo específico); al filtrar, las estadísticas se recalculan. Cada registro muestra el objetivo, la fecha, la duración, la nota y su estado (✅ Completado o ⏳ Pendiente), y tiene tres botones: **Completar / Pendiente** (cambia el estado), **Editar** y **Eliminar** (pide confirmación antes de borrar). El botón **➕ Registrar entrenamiento** abre el formulario. Si no hay registros, muestra un mensaje invitando a crear el primero. |
 | 8 | **Nuevo registro** | `diario_nuevo` | Formulario para registrar un entrenamiento: elegir el objetivo, escribir la fecha (viene con la de hoy), la duración en minutos y una nota opcional. Valida que se elija un objetivo, que la fecha no esté vacía y que la duración esté entre 1 y 300; si algo falta, muestra el error en rojo y no guarda. Tiene los botones **Guardar registro** y **Cancelar**. |
 | 9 | **Editar registro** | `diario_editar/{id}` | Usa el mismo formulario, pero con los datos del registro ya cargados, para modificar el objetivo, la fecha, la duración o la nota. Se conserva el estado (completado o pendiente). Se guarda con **Guardar cambios**. |                                                                                 |
+
+
 **Cómo se navega:**
 
 - Inicio → Rutina → Día
@@ -79,7 +81,7 @@ La navegación se hace con **Navigation Compose**, usando `NavController` y `Nav
 - **Cambiar el estado** de un registro entre Completado y Pendiente con un toque.
 -**Filtrar Selección de categoría:** En la barra superior de filtros, el usuario elige el grupo muscular o tipo de rutina que planea realizar hoy (ej. *Espalda*).
 
-**¿Por qué seis pantallas?** El mínimo eran tres, pero un gimnasio tiene mucha información (rutinas, días, ejercicios, actividades y retos). Separarla en pantallas con un propósito claro evita que la interfaz quede saturada.
+**¿Por qué 9 pantallas?** El mínimo eran tres, pero un gimnasio tiene mucha información (rutinas, días, ejercicios, actividades, retos,  favoritos, diario, nuevo registro y editar registro). Separarla en pantallas con un propósito claro evita que la interfaz quede saturada.
 
 ---
 
@@ -111,7 +113,6 @@ La navegación se hace con **Navigation Compose**, usando `NavController` y `Nav
 
 **¿Cómo funciona?**
 
-**¿Cómo funciona?**
 
 - El progreso se guarda en la tabla `progreso_retos` de Room, con un registro por reto que indica cuántos días lleva.
 - `GimnasioRepository` guarda el avance y `GimnasioViewModel` lo expone como `StateFlow` (`progresoRetos`). Las pantallas lo observan con `collectAsState()`.
@@ -211,24 +212,25 @@ La navegación se hace con **Navigation Compose**, usando `NavController` y `Nav
 
 ## 8. Estructura del proyecto
 
+El código fuente está organizado siguiendo una arquitectura modular por capas para separar la lógica de datos, la navegación y la interfaz de usuario en Jetpack Compose:
+
+```text
 GIMNASIO/
 ├── app/src/main/
 │   ├── java/com/example/gimnasio/
-│   │   ├── MainActivity.kt          (solo arranca la app)
-│   │   ├── data/                    (entidades, DAOs, base de datos Room, Repository y datos fijos)
-│   │   ├── model/                   (modelos de datos)
-│   │   ├── viewmodel/               (GimnasioViewModel)
-│   │   ├── util/                    (búsqueda de rutinas)
-│   │   ├── navigation/              (AppNavegacion)
+│   │   ├── MainActivity.kt          # Punto de entrada que inicializa la aplicación
+│   │   ├── data/                    # Entidades, DAOs, base de datos Room, Repository y datos locales
+│   │   ├── model/                   # Modelos de datos de dominio
+│   │   ├── viewmodel/               # Gestión de estado y lógica de presentación (GimnasioViewModel)
+│   │   ├── util/                    # Utilidades y lógica de búsqueda/filtrado de rutinas
+│   │   ├── navigation/              # Configuración de rutas y navegación (AppNavegacion)
 │   │   └── ui/
-│   │       ├── theme/               (Color, Theme, Type)
-│   │       ├── components/          (componentes reutilizables)
-│   │       └── screens/             (una pantalla por archivo)
-│   └── res/drawable/                (imágenes de rutinas, actividades y retos)
-├── capturas/                        (capturas para este README)
-└── README.md
-
----
+│   │       ├── theme/               # Paleta de colores, tipografía y tema Material 3 (Color, Theme, Type)
+│   │       ├── components/          # Componentes visuales reutilizables
+│   │       └── screens/             # Pantallas principales de la app (una pantalla por archivo)
+│   └── res/drawable/                # Recursos gráficos e imágenes de rutinas, actividades y retos
+├── capturas/                        # Capturas de pantalla utilizadas en la documentación
+└── README.md                        # Documentación general del proyecto
 
 **Responsabilidades:**
 
