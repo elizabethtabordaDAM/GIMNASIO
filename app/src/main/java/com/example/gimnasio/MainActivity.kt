@@ -1014,7 +1014,8 @@ fun GIMNASIO(
     progresoRetos: List<Int> = listOf(0, 0, 0),
     favoritos: List<Int> = emptyList(),
     onFavoritoClick: (Int) -> Unit = {},
-    onVerFavoritos: () -> Unit = {}
+    onVerFavoritos: () -> Unit = {},
+    onVerDiario: () -> Unit = {}
 ) {
     // Scroll vertical de toda la pantalla (deslizar hacia arriba / abajo)
     Column(
@@ -1093,6 +1094,20 @@ fun GIMNASIO(
             )
         ) {
             Text("❤️ Mis rutinas favoritas (${favoritos.size})")
+        }
+
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = onVerDiario,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
+        ) {
+            Text("📝 Mi diario de entrenamiento")
         }
 
         // ----- Objetivos (deslizar a los lados y tocar para ver la rutina) -----
@@ -1444,12 +1459,19 @@ fun RetoFlashCard(reto: RetoFlash, diasCompletados: Int, onClick: () -> Unit) {
 
 
 @Composable
+
 fun AppNavegacion() {
     val navController = rememberNavController()
     val viewModel: GimnasioViewModel = viewModel()
     val progresoRetos by viewModel.progresoRetos.collectAsState()
     val favoritos by viewModel.favoritos.collectAsState()
     val alternarFavorito: (Int) -> Unit = { indice -> viewModel.alternarFavorito(indice) }
+    val registrosFiltrados by viewModel.registrosFiltrados.collectAsState()
+    val todosLosRegistros by viewModel.registros.collectAsState()
+    val estadisticas by viewModel.estadisticas.collectAsState()
+    val filtroObjetivo by viewModel.filtroObjetivo.collectAsState()
+
+
 
     NavHost(navController = navController, startDestination = "inicio") {
         composable("inicio") {
@@ -1460,8 +1482,52 @@ fun AppNavegacion() {
                 progresoRetos = progresoRetos,
                 favoritos = favoritos,
                 onFavoritoClick = alternarFavorito,
-                onVerFavoritos = { navController.navigate("favoritos") }
+                onVerFavoritos = { navController.navigate("favoritos") },
+                onVerDiario = { navController.navigate("diario") }
             )
+        }
+        // ----- Diario de entrenamiento -----
+        composable("diario") {
+            DiarioScreen(
+                registros = registrosFiltrados,
+                estadisticas = estadisticas,
+                filtroObjetivo = filtroObjetivo,
+                onFiltroChange = { viewModel.cambiarFiltro(it) },
+                onNuevo = { navController.navigate("diario_nuevo") },
+                onEditar = { id -> navController.navigate("diario_editar/$id") },
+                onEliminar = { viewModel.eliminarRegistro(it) },
+                onAlternarCompletado = { viewModel.alternarCompletado(it) },
+                onVolver = { navController.popBackStack() }
+            )
+        }
+
+        composable("diario_nuevo") {
+            FormularioRegistroScreen(
+                registroInicial = null,
+                onGuardar = {
+                    viewModel.guardarRegistro(it)
+                    navController.popBackStack()
+                },
+                onVolver = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = "diario_editar/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getInt("id") ?: 0
+            val registro = todosLosRegistros.find { it.id == id }
+            if (registro != null) {
+                FormularioRegistroScreen(
+                    registroInicial = registro,
+                    onGuardar = {
+                        viewModel.actualizarRegistro(it)
+                        navController.popBackStack()
+                    },
+                    onVolver = { navController.popBackStack() }
+                )
+            }
         }
 
             composable(
