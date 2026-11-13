@@ -231,6 +231,8 @@ GIMNASIO/
 │   └── res/drawable/                # Recursos gráficos e imágenes de rutinas, actividades y retos
 ├── capturas/                        # Capturas de pantalla utilizadas en la documentación
 └── README.md                        # Documentación general del proyecto
+```
+
 
 **Responsabilidades:**
 
